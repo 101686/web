@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Babylon.js sample code</title>
+
+        <!-- Babylon.js -->
+        <script src="https://code.jquery.com/pep/0.4.2/pep.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/ammo.js"></script>
+        <script src="https://preview.babylonjs.com/cannon.js"></script>
+        <script src="https://preview.babylonjs.com/Oimo.js"></script>
+        <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+        <script src="https://preview.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+        <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+        <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+        <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+        <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+        </style>
+    </head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
+        class Playground {
+            static CreateScene(engine, canvas) {
+                var scene = new BABYLON.Scene(engine);
+                // Create simple sphere
+                var sphere = BABYLON.MeshBuilder.CreateIcoSphere("sphere", { radius: 0.2, flat: true, subdivisions: 1 }, scene);
+                sphere.position.y = 3;
+                sphere.material = new BABYLON.StandardMaterial("sphere material", scene);
+                // Lights and camera
+                var light = new BABYLON.DirectionalLight("light", new BABYLON.Vector3(0, -0.5, 1.0), scene);
+                light.position = new BABYLON.Vector3(0, 5, -2);
+                var camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2, 3, new BABYLON.Vector3(0, 15, -20), scene);
+                camera.attachControl(canvas, true);
+                //scene.activeCamera.beta += 0.8;
+                // Default Environment
+                var environment = scene.createDefaultEnvironment({ enableGroundShadow: true, groundYBias: 1, skyboxSize: 80, groundSize: 60 });
+                environment.setMainColor(BABYLON.Color3.FromHexString("#74b9ff"));
+                // Shadows
+                //  var shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+                // shadowGenerator.useBlurExponentialShadowMap = true;
+                // shadowGenerator.blurKernel = 32;
+                //  shadowGenerator.addShadowCaster(sphere, true);
+                // Enable VR
+                var vrHelper = scene.createDefaultVRExperience({ createDeviceOrientationCamera: false });
+                vrHelper.enableTeleportation({ floorMeshes: [environment.ground] });
+                // Runs every frame to rotate the sphere
+                scene.onBeforeRenderObservable.add(() => {
+                    sphere.rotation.y += 0.0001 * scene.getEngine().getDeltaTime();
+                    sphere.rotation.x += 0.0001 * scene.getEngine().getDeltaTime();
+                });
+                var importdata = new Importdata();
+                importdata.importmesh(scene);
+                // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
+                //  var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene);
+                var normalHelper2 = new NormalHelper2();
+                normalHelper2.showNormals2(sphere, scene);
+                sphere.isVisible = false;
+                //         normalHelper2.showNormals(sphere, 0.25, new BABYLON.Color3(1, 0, 0), scene);
+                var class2 = new PH.F(10, 10, 10, new PH.D(10, 10, 10));
+                scene.debugLayer.onPropertyChangedObservable.add((cmd) => { });
+                var cmd = class2.y;
+                console.log(cmd);
+                //var keys={letft:0,right:0,forward:0,back:0};window.addEventListener("keydown", handleKeyDown, false);window.addEventListener("keyup", handleKeyUp, false);function handleKeyDown(evt){    if (evt.keyCode==65){//A        keys.left=1;    }    if (evt.keyCode==68){//D        keys.right=1;    }    if (evt.keyCode==87){//W        keys.forward=1;    }    if (evt.keyCode==83){//S        keys.back=1;    }}function handleKeyUp(evt){    if (evt.keyCode==65){        keys.left=0;    }    if (evt.keyCode==68){        keys.right=0;    }    if (evt.keyCode==87){        keys.forward=0;    }    if (evt.keyCode==83){        keys.back=0;    }}and hereengine.runRenderLoop(function () {     if (keys.left==1)    {        //move left    }    if (keys.right==1)    {        //move right    }    if (keys.back==1)    {        //move back    }    if (keys.forward==1)    {        //move forward    }});
+                return scene;
+            }
+        }
+        class Importdata {
+            importmesh(scene) {
+                BABYLON.SceneLoader.ImportMesh("rootMesh", "https://dl.dropbox.com/s/8vqyz6chl9f86o9/", "model8-optimized-processed.glb", scene, function (newMeshes, particleSystems, skeletons) {
+                    var dude = newMeshes[0];
+                    dude.rotation.y = Math.PI;
+                    dude.position = new BABYLON.Vector3(0, 3, 10);
+                });
+            }
+        }
+        var PH;
+        (function (PH) {
+            // dimantion
+            class D {
+                constructor(x, y, z) {
+                    this.x = x;
+                    this.y = y;
+                    this.z = z;
+                }
+            }
+            PH.D = D;
+            // vector
+            class V extends D {
+                constructor(x, y, z, p) {
+                    super(x, y, z);
+                    this.Point = p;
+                }
+            }
+            PH.V = V;
+            // Force
+            class F extends V {
+                constructor(x, y, z, p) {
+                    super(x, y, z, p);
+                }
+            }
+            PH.F = F;
+        })(PH || (PH = {}));
+        class NormalHelper2 {
+            showNormals2(mesh, scene) {
+                var points = [];
+                var normals = mesh.getVerticesData(BABYLON.VertexBuffer.NormalKind);
+                var mat = new BABYLON.StandardMaterial("mat", scene);
+                mat.emissiveColor = new BABYLON.Color3(1, 1, 1);
+                mat.disableLighting = true;
+                var plane = BABYLON.MeshBuilder.CreateSphere("plane", { diameter: 0.01, segments: 5 }, scene);
+                var SPS = new BABYLON.SolidParticleSystem('SPS', scene);
+                SPS.addShape(plane, normals.length / 3);
+                var SPSmesh = SPS.buildMesh();
+                SPSmesh.material = mat;
+                SPSmesh.position.y = mesh.position.y;
+                SPSmesh.position.x = mesh.position.x;
+                SPSmesh.freezeWorldMatrix();
+                SPSmesh.alwaysSelectAsActiveMesh = true;
+                plane.dispose(); // free memory
+                for (var i = 0; i < normals.length; i += 3) {
+                    var v1 = BABYLON.Vector3.FromArray(normals, i);
+                    points.push(v1.add(mesh.position).scaleInPlace(5));
+                }
+                SPS.initParticles = () => {
+                    for (var i = 0; i < normals.length / 3; i += 1) {
+                        SPS.particles[i].position.x = points[i].x;
+                        SPS.particles[i].position.y = points[i].y;
+                        SPS.particles[i].position.z = points[i].z;
+                    }
+                };
+                // init all particle values and set them once
+                SPS.initParticles();
+                SPS.setParticles();
+                // Tuning : plane particles facing, so billboard and no rotation computation
+                // colors not changing then, neither textures
+                //SPS.billboard = true;
+                SPS.computeParticleRotation = false;
+                SPS.computeParticleColor = false;
+                SPS.computeParticleTexture = false;
+            }
+        }
+        class NormalHelper {
+            showNormals(mesh, size, color, sc) {
+                var normals = mesh.getVerticesData(BABYLON.VertexBuffer.NormalKind);
+                var positions = mesh.getVerticesData(BABYLON.VertexBuffer.PositionKind);
+                color = color || BABYLON.Color3.White();
+                size = size || 1;
+                var lines = [];
+                for (var i = 0; i < normals.length; i += 3) {
+                    var v1 = BABYLON.Vector3.FromArray(positions, i);
+                    var v2 = v1.add(BABYLON.Vector3.FromArray(normals, i).scaleInPlace(size));
+                    lines.push([v1.add(mesh.position), v2.add(mesh.position)]);
+                }
+                var normalLines = BABYLON.MeshBuilder.CreateLineSystem("normalLines", { lines: lines }, sc);
+                normalLines.color = color;
+                return normalLines;
+            }
+        }
+        createScene = function() { return Playground.CreateScene(engine, engine.getRenderingCanvas()); }
+    var engine;
+    try {
+    engine = createDefaultEngine();
+    } catch(e) {
+    console.log("the available createEngine function failed. Creating the default engine instead");
+    engine = createDefaultEngine();
+    }
+        if (!engine) throw 'engine should not be null.';
+scene = createScene();;
+        sceneToRender = scene
+
+        engine.runRenderLoop(function () {
+            if (sceneToRender && sceneToRender.activeCamera) {
+                sceneToRender.render();
+            }
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>
