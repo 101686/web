@@ -60,7 +60,7 @@
                 camera.attachControl(canvas, true);
                 //scene.activeCamera.beta += 0.8;
                 // Default Environment
-                var environment = scene.createDefaultEnvironment({ enableGroundShadow: true, groundYBias: 100, skyboxSize: 80, groundSize: 60 });
+                var environment = scene.createDefaultEnvironment({ enableGroundShadow: true, groundYBias: 10, skyboxSize: 80, groundSize: 60 });
                 environment.setMainColor(BABYLON.Color3.FromHexString("#74b9ff"));
                 // Shadows
                 //  var shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
